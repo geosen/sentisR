@@ -1,0 +1,7 @@
+Package: sentisR
+Type: Package
+Title: Sentis functions for bioinformatics analysis
+Version: 0.1.0
+Imports:
+		biomaRt
+RoxygenNote: 7.2.0
