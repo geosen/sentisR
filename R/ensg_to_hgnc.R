@@ -74,8 +74,8 @@ ensg_to_hgnc <- function(table, ensembl_version = NULL, organism = 'hsapiens') {
     tdedup <- as.data.frame(t(dedup))
     
     #calculate mean expression and variance of duplicate genes
-    dmeans <- data.frame(colMeans(tdedup))
-    dvars <- data.frame(lapply(tdedup, var))
+    dmeans <- data.frame(colMeans(tdedup, na.rm=TRUE))
+    dvars <- data.frame(lapply(tdedup, var(na.rm=TRUE)))
     
     #check which genes to keep
     if(sum(dmeans > 1) == 1) {
