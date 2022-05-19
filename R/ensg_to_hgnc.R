@@ -22,7 +22,7 @@ ensg_to_hgnc <- function(table, ensembl_version = NULL, organism = 'hsapiens') {
   {
     dataset = 'hsapiens_gene_ensembl'
   
-  if (!is.null(version)){
+  if (!is.null(ensembl_version)){
     mart = useEnsembl(biomart = 'ensembl', dataset = dataset, version = ensembl_version)  
     conv_table <- getBM(attributes = c('hgnc_symbol','ensembl_gene_id_version'), filters = 'ensembl_gene_id_version', values = rownames(table), mart = mart)
     conv_table <- conv_table[!duplicated(conv_table$ensembl_gene_id_version),]
@@ -38,18 +38,17 @@ ensg_to_hgnc <- function(table, ensembl_version = NULL, organism = 'hsapiens') {
   } else if (organism == 'mmusculus') {
     
     dataset = 'mmusculus_gene_ensembl'
-    if (!is.null(version)){
+    if (!is.null(ensembl_version)){
       mart = useEnsembl(biomart = 'ensembl', dataset = dataset, version = ensembl_version)  
-      conv_table <- getBM(attributes = c('hgnc_symbol','ensembl_gene_id_version'), filters = 'ensembl_gene_id_version', values = rownames(table), mart = mart)
+      conv_table <- getBM(attributes = c('mgi_symbol','ensembl_gene_id_version'), filters = 'ensembl_gene_id_version', values = rownames(table), mart = mart)
       conv_table <- conv_table[!duplicated(conv_table$ensembl_gene_id_version),]
-      table$genes <- conv_table$hgnc_symbol[match(rownames(table),conv_table$ensembl_gene_id_version)]
-      
+      table$genes <- conv_table$mgi_symbol[match(rownames(table),conv_table$ensembl_gene_id_version)]
     } else {
       rownames(table) <- gsub('\\.[[:digit:]]{1+}$','',rownames(table))
       mart = useEnsembl(biomart = 'ensembl', dataset = dataset)
-      conv_table <- getBM(attributes = c('hgnc_symbol','ensembl_gene_id'), filters = 'ensembl_gene_id', values = rownames(table), mart = mart)
+      conv_table <- getBM(attributes = c('mgi_symbol','ensembl_gene_id'), filters = 'ensembl_gene_id', values = rownames(table), mart = mart)
       conv_table <- conv_table[!duplicated(conv_table$ensembl_gene_id),]
-      table$genes <- conv_table$hgnc_symbol[match(rownames(table),conv_table$ensembl_gene_id)]
+      table$genes <- conv_table$mgi_symbol[match(rownames(table),conv_table$ensembl_gene_id)]
     }
     
     
@@ -75,7 +74,8 @@ ensg_to_hgnc <- function(table, ensembl_version = NULL, organism = 'hsapiens') {
     
     #calculate mean expression and variance of duplicate genes
     dmeans <- data.frame(colMeans(tdedup, na.rm=TRUE))
-    dvars <- data.frame(lapply(tdedup, var(na.rm=TRUE)))
+    dvars <- data.frame(lapply(tdedup, var, na.rm = TRUE))
+    
     
     #check which genes to keep
     if(sum(dmeans > 1) == 1) {
