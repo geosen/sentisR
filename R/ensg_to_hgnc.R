@@ -96,7 +96,7 @@ ensg_to_hgnc <- function(table, ensembl_version = 0, organism = 'hsapiens') {
     }
     
     #deduplicate and return final table
-    final_table <- table_no_genes[-genes_to_remove,1:length(table_no_genes)]
+    final_table <- table_no_genes[-genes_to_remove,]
     rownames(final_table) <- conv_table$hgnc_symbol[match(rownames(final_table),conv_table$ensembl_gene_id)]
     return(final_table) } else {
       final_table <- table_no_genes
