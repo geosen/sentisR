@@ -64,7 +64,7 @@ ensg_to_hgnc <- function(table, ensembl_version = 0, organism = 'hsapiens') {
   table = table[!is.na(table$genes),]
   
   double_genes <- table$genes[which(duplicated(table$genes))]  
-  table_no_genes <- table[,-length(table)]
+  table_no_genes <- data.frame(table[,-length(table)])
   genes_to_remove  <- c()
   if(length(double_genes)>0){
     
@@ -98,7 +98,7 @@ ensg_to_hgnc <- function(table, ensembl_version = 0, organism = 'hsapiens') {
     }
     
     #deduplicate and return final table
-    final_table <- table_no_genes[-genes_to_remove,]
+    final_table <- data.frame(table_no_genes[-genes_to_remove,])
     rownames(final_table) <- conv_table$hgnc_symbol[match(rownames(final_table),conv_table$ensembl_gene_id)]
     return(final_table) } else {
       final_table <- table_no_genes
