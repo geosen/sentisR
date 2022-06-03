@@ -90,8 +90,10 @@ ensg_to_hgnc <- function(table, ensembl_version = 0, organism = 'hsapiens') {
       } else if(sum(!is.na(dvars)) > 0) {
         #if 2 or more genes have expression over 1 or 2 or all genes have expression lower than 1 then keep the one with the highest variance
         genes_to_remove <- c(genes_to_remove, possible_indices[dvars != max(dvars)])
-      } else {
+      } else if(sum(dmeans) >0) {
         genes_to_remove <- c(genes_to_remove, possible_indices[dmeans != max(dmeans)])
+      } else {
+        genes_to_remove <- c(genes_to_remove, possible_indices[2:length(possible_indices)])
       }
     }
     
