@@ -87,14 +87,16 @@ ensg_to_hgnc <- function(table, ensembl_version = 0, organism = 'hsapiens') {
       if(sum(dmeans > 1) == 1) {
         #if only 1 gene has a mean expression over 1, remove all others 
         genes_to_remove <-  c(genes_to_remove,possible_indices[dmeans <1])
-      } else {
+      } else if(sum(!is.na(dvars)) > 0) {
         #if 2 or more genes have expression over 1 or 2 or all genes have expression lower than 1 then keep the one with the highest variance
         genes_to_remove <- c(genes_to_remove, possible_indices[dvars != max(dvars)])
+      } else {
+        genes_to_remove <- c(genes_to_remove, possible_indices[dmeans != max(dmeans)])
       }
     }
     
     #deduplicate and return final table
-    final_table <- table_no_genes[-genes_to_remove,]
+    final_table <- table_no_genes[-genes_to_remove,1:length(table_no_genes)]
     rownames(final_table) <- conv_table$hgnc_symbol[match(rownames(final_table),conv_table$ensembl_gene_id)]
     return(final_table) } else {
       final_table <- table_no_genes
