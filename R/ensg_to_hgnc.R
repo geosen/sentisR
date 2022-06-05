@@ -17,6 +17,7 @@
 #'@export
 
 
+
 ensg_to_hgnc <- function(table, ensembl_version = 0, organism = 'hsapiens') {
   
   
@@ -66,6 +67,7 @@ ensg_to_hgnc <- function(table, ensembl_version = 0, organism = 'hsapiens') {
   double_genes <- table$genes[which(duplicated(table$genes))]  
   table_no_genes <- data.frame(table[,-length(table)])
   genes_to_remove  <- c()
+  
   if(length(double_genes)>0){
     
     
@@ -90,22 +92,64 @@ ensg_to_hgnc <- function(table, ensembl_version = 0, organism = 'hsapiens') {
       } else if(sum(!is.na(dvars)) > 0) {
         #if 2 or more genes have expression over 1 or 2 or all genes have expression lower than 1 then keep the one with the highest variance
         genes_to_remove <- c(genes_to_remove, possible_indices[dvars != max(dvars)])
-      } else if(sum(dmeans) >0) {
+      } else if(sum(dmeans) != 0) {
         genes_to_remove <- c(genes_to_remove, possible_indices[dmeans != max(dmeans)])
       } else {
         genes_to_remove <- c(genes_to_remove, possible_indices[2:length(possible_indices)])
       }
-    }
     
-    #deduplicate and return final table
-    final_table <- data.frame(table_no_genes[-genes_to_remove,])
-    rownames(final_table) <- conv_table$hgnc_symbol[match(rownames(final_table),conv_table$ensembl_gene_id)]
-    return(final_table) } else {
-      final_table <- table_no_genes
-      rownames(final_table) <- conv_table$hgnc_symbol[match(rownames(final_table),conv_table$ensembl_gene_id)]
+      
+    } ## end of duplicate gene indexes decisive loop
+    
+    
+    if(organism == 'hsapiens')
+    {
+      if (ensembl_version != 0){
+        final_table <- data.frame(table_no_genes[-genes_to_remove,])
+        rownames(final_table) <- conv_table$hgnc_symbol[match(rownames(final_table),conv_table$ensembl_gene_id_version)]
+      } else {
+        final_table <- data.frame(table_no_genes[-genes_to_remove,])
+        rownames(final_table) <- conv_table$hgnc_symbol[match(rownames(final_table),conv_table$ensembl_gene_id)]      
+      }
+    } else if (organism == 'mmusculus') {
+      
+      if (ensembl_version != 0){
+        final_table <- data.frame(table_no_genes[-genes_to_remove,])
+        rownames(final_table) <- conv_table$mgi_symbol[match(rownames(final_table),conv_table$ensembl_gene_id_version)]
+        } else {
+          final_table <- data.frame(table_no_genes[-genes_to_remove,])
+          rownames(final_table) <- conv_table$mgi_symbol[match(rownames(final_table),conv_table$ensembl_gene_id)]
+      }
+    return(final_table) }
+    
+    ####end of if length_double>0 bracket
+    } else {
+      if(organism == 'hsapiens')
+      {
+        if (ensembl_version != 0){
+        final_table <- data.frame(table_no_genes)
+        rownames(final_table) <- conv_table$hgnc_symbol[match(rownames(final_table),conv_table$ensembl_gene_id_version)]
+        } else {
+        final_table <- data.frame(table_no_genes)
+        rownames(final_table) <- conv_table$hgnc_symbol[match(rownames(final_table),conv_table$ensembl_gene_id)]      
+        }
+      } else if (organism == 'mmusculus') {
+      
+      if (ensembl_version != 0){
+        final_table <- data.frame(table_no_genes)
+        rownames(final_table) <- conv_table$mgi_symbol[match(rownames(final_table),conv_table$ensembl_gene_id_version)]
+      } else {
+        final_table <- data.frame(table_no_genes)
+        rownames(final_table) <- conv_table$mgi_symbol[match(rownames(final_table),conv_table$ensembl_gene_id)]
+      }
       return(final_table)
       
     }
+    } ##end of if length_double>0 bracket else version
+  
+    
+    
+    }  ##end of function bracket
   
   
-}
+
