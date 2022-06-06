@@ -165,7 +165,7 @@ ensg_to_hgnc <- function(table, ensembl_version = 0, organism = 'hsapiens') {
   
   
   
-    names(final_table) <- names(table)
+    colnames(final_table) <- colnames(table)
     return(final_table)
     
     }  ##end of function bracket
