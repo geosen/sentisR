@@ -67,6 +67,7 @@ ensg_to_hgnc <- function(table, ensembl_version = 0, organism = 'hsapiens') {
   double_genes <- table$genes[which(duplicated(table$genes))]  
   table_no_genes <- data.frame(table[,-length(table)])
   rownames(table_no_genes) <- rownames(table)
+  colnames(table_no_genes) <- colnames(table)[-length(table)]
   genes_to_remove  <- c()
   
   if(length(double_genes)>0) {
