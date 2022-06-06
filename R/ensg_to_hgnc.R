@@ -66,6 +66,7 @@ ensg_to_hgnc <- function(table, ensembl_version = 0, organism = 'hsapiens') {
   
   double_genes <- table$genes[which(duplicated(table$genes))]  
   table_no_genes <- data.frame(table[,-length(table)])
+  rownames(table_no_genes) <- rownames(table)
   genes_to_remove  <- c()
   
   if(length(double_genes)>0){
@@ -92,7 +93,7 @@ ensg_to_hgnc <- function(table, ensembl_version = 0, organism = 'hsapiens') {
       } else if(sum(!is.na(dvars)) > 0) {
         #if 2 or more genes have expression over 1 or 2 or all genes have expression lower than 1 then keep the one with the highest variance
         genes_to_remove <- c(genes_to_remove, possible_indices[dvars != max(dvars)])
-      } else if(sum(dmeans) != 0) {
+      } else if((sum(dmeans) != 0) & (sum(dmeans == max(dmeans)) == 1 ))  {
         genes_to_remove <- c(genes_to_remove, possible_indices[dmeans != max(dmeans)])
       } else {
         genes_to_remove <- c(genes_to_remove, possible_indices[2:length(possible_indices)])
@@ -106,19 +107,19 @@ ensg_to_hgnc <- function(table, ensembl_version = 0, organism = 'hsapiens') {
     {
       if (ensembl_version != 0){
         final_table <- data.frame(table_no_genes[-genes_to_remove,])
-        rownames(final_table) <- conv_table$hgnc_symbol[match(rownames(final_table),conv_table$ensembl_gene_id_version)]
+        rownames(final_table) <- conv_table$hgnc_symbol[match(rownames(table_no_genes)[-genes_to_remove],conv_table$ensembl_gene_id_version)]
       } else {
         final_table <- data.frame(table_no_genes[-genes_to_remove,])
-        rownames(final_table) <- conv_table$hgnc_symbol[match(rownames(final_table),conv_table$ensembl_gene_id)]      
+        rownames(final_table) <- conv_table$hgnc_symbol[match(match(rownames(table_no_genes)[-genes_to_remove],conv_table$ensembl_gene_id)]      
       }
     } else if (organism == 'mmusculus') {
       
       if (ensembl_version != 0){
         final_table <- data.frame(table_no_genes[-genes_to_remove,])
-        rownames(final_table) <- conv_table$mgi_symbol[match(rownames(final_table),conv_table$ensembl_gene_id_version)]
+        rownames(final_table) <- conv_table$mgi_symbol[match(match(rownames(table_no_genes)[-genes_to_remove],conv_table$ensembl_gene_id_version)]
         } else {
           final_table <- data.frame(table_no_genes[-genes_to_remove,])
-          rownames(final_table) <- conv_table$mgi_symbol[match(rownames(final_table),conv_table$ensembl_gene_id)]
+          rownames(final_table) <- conv_table$mgi_symbol[match(match(rownames(table_no_genes)[-genes_to_remove],conv_table$ensembl_gene_id)]
       }
      }
     
@@ -128,19 +129,19 @@ ensg_to_hgnc <- function(table, ensembl_version = 0, organism = 'hsapiens') {
       {
         if (ensembl_version != 0){
         final_table <- data.frame(table_no_genes)
-        rownames(final_table) <- conv_table$hgnc_symbol[match(rownames(final_table),conv_table$ensembl_gene_id_version)]
+        rownames(final_table) <- conv_table$hgnc_symbol[match(rownames(table_no_genes),conv_table$ensembl_gene_id_version)]
         } else {
         final_table <- data.frame(table_no_genes)
-        rownames(final_table) <- conv_table$hgnc_symbol[match(rownames(final_table),conv_table$ensembl_gene_id)]      
+        rownames(final_table) <- conv_table$hgnc_symbol[match(rownames(table_no_genes),conv_table$ensembl_gene_id)]      
         }
       } else if (organism == 'mmusculus') {
       
       if (ensembl_version != 0){
         final_table <- data.frame(table_no_genes)
-        rownames(final_table) <- conv_table$mgi_symbol[match(rownames(final_table),conv_table$ensembl_gene_id_version)]
+        rownames(final_table) <- conv_table$mgi_symbol[match(rownames(table_no_genes),conv_table$ensembl_gene_id_version)]
       } else {
         final_table <- data.frame(table_no_genes)
-        rownames(final_table) <- conv_table$mgi_symbol[match(rownames(final_table),conv_table$ensembl_gene_id)]
+        rownames(final_table) <- conv_table$mgi_symbol[match(rownames(table_no_genes),conv_table$ensembl_gene_id)]
       }
      
       
