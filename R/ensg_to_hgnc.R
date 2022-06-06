@@ -120,7 +120,7 @@ ensg_to_hgnc <- function(table, ensembl_version = 0, organism = 'hsapiens') {
           final_table <- data.frame(table_no_genes[-genes_to_remove,])
           rownames(final_table) <- conv_table$mgi_symbol[match(rownames(final_table),conv_table$ensembl_gene_id)]
       }
-    return(final_table) }
+     }
     
     ####end of if length_double>0 bracket
     } else {
@@ -142,12 +142,12 @@ ensg_to_hgnc <- function(table, ensembl_version = 0, organism = 'hsapiens') {
         final_table <- data.frame(table_no_genes)
         rownames(final_table) <- conv_table$mgi_symbol[match(rownames(final_table),conv_table$ensembl_gene_id)]
       }
-      return(final_table)
+     
       
     }
     } ##end of if length_double>0 bracket else version
   
-    
+  return(final_table)
     
     }  ##end of function bracket
   
