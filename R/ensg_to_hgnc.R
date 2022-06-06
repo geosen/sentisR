@@ -69,9 +69,8 @@ ensg_to_hgnc <- function(table, ensembl_version = 0, organism = 'hsapiens') {
   rownames(table_no_genes) <- rownames(table)
   genes_to_remove  <- c()
   
-  if(length(double_genes)>0){
-    
-    
+  if(length(double_genes)>0) {
+      
     for (i in 1:length(double_genes)) {
       
       dg <- double_genes[i]
@@ -99,56 +98,75 @@ ensg_to_hgnc <- function(table, ensembl_version = 0, organism = 'hsapiens') {
         genes_to_remove <- c(genes_to_remove, possible_indices[2:length(possible_indices)])
       }
     
-      
     } ## end of duplicate gene indexes decisive loop
     
     
-    if(organism == 'hsapiens')
-    {
-      if (ensembl_version != 0){
-        final_table <- data.frame(table_no_genes[-genes_to_remove,])
-        rownames(final_table) <- conv_table$hgnc_symbol[match(rownames(table_no_genes)[-genes_to_remove],conv_table$ensembl_gene_id_version)]
-      } else {
-        final_table <- data.frame(table_no_genes[-genes_to_remove,])
-        rownames(final_table) <- conv_table$hgnc_symbol[match(match(rownames(table_no_genes)[-genes_to_remove],conv_table$ensembl_gene_id)]      
-      }
-    } else if (organism == 'mmusculus') {
+    if(organism == 'hsapiens') {
       
-      if (ensembl_version != 0){
-        final_table <- data.frame(table_no_genes[-genes_to_remove,])
-        rownames(final_table) <- conv_table$mgi_symbol[match(match(rownames(table_no_genes)[-genes_to_remove],conv_table$ensembl_gene_id_version)]
-        } else {
+      if(ensembl_version != 0) {
           final_table <- data.frame(table_no_genes[-genes_to_remove,])
-          rownames(final_table) <- conv_table$mgi_symbol[match(match(rownames(table_no_genes)[-genes_to_remove],conv_table$ensembl_gene_id)]
-      }
-     }
-    
-    ####end of if length_double>0 bracket
-    } else {
-      if(organism == 'hsapiens')
+          rownames(final_table) <- rownames(table_no_genes)[-genes_to_remove]
+          rownames(final_table) <- conv_table$hgnc_symbol[match(rownames(final_table),conv_table$ensembl_gene_id_version)]
+          } else {
+          final_table <- data.frame(table_no_genes[-genes_to_remove,])
+          rownames(final_table) <- rownames(table_no_genes)[-genes_to_remove]
+          rownames(final_table) <- conv_table$hgnc_symbol[match(rownames(final_table),conv_table$ensembl_gene_id)]      
+          }
+    } else if (organism == 'mmusculus') 
       {
-        if (ensembl_version != 0){
+      
+      if(ensembl_version != 0) {
+          final_table <- data.frame(table_no_genes[-genes_to_remove,])
+          rownames(final_table) <- rownames(table_no_genes)[-genes_to_remove]
+          rownames(final_table) <- conv_table$mgi_symbol[match(rownames(final_table),conv_table$ensembl_gene_id_version)]
+          } else {
+          final_table <- data.frame(table_no_genes[-genes_to_remove,])
+          rownames(final_table) <- rownames(table_no_genes)[-genes_to_remove]
+          rownames(final_table) <- conv_table$mgi_symbol[match(rownames(final_table),conv_table$ensembl_gene_id)]
+          }
+        }
+    ####end of if length_double>0 bracket
+  } else 
+    {
+    
+    if(organism == 'hsapiens') {
+        if(ensembl_version != 0) {
         final_table <- data.frame(table_no_genes)
         rownames(final_table) <- conv_table$hgnc_symbol[match(rownames(table_no_genes),conv_table$ensembl_gene_id_version)]
         } else {
         final_table <- data.frame(table_no_genes)
         rownames(final_table) <- conv_table$hgnc_symbol[match(rownames(table_no_genes),conv_table$ensembl_gene_id)]      
         }
-      } else if (organism == 'mmusculus') {
+      } else if(organism == 'mmusculus') {
       
-      if (ensembl_version != 0){
+      if(ensembl_version != 0){
         final_table <- data.frame(table_no_genes)
         rownames(final_table) <- conv_table$mgi_symbol[match(rownames(table_no_genes),conv_table$ensembl_gene_id_version)]
       } else {
         final_table <- data.frame(table_no_genes)
         rownames(final_table) <- conv_table$mgi_symbol[match(rownames(table_no_genes),conv_table$ensembl_gene_id)]
       }
-     
-      
-    }
-    } ##end of if length_double>0 bracket else version
+    
+      }
+    
+      } ##end of if length_double>0 bracket else version
   
-  return(final_table)
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+    return(final_table)
     
     }  ##end of function bracket
   
