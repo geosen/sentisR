@@ -90,7 +90,7 @@ ensg_to_hgnc <- function(table, ensembl_version = 0, organism = 'hsapiens') {
       if(sum(dmeans > 1) == 1) {
         #if only 1 gene has a mean expression over 1, remove all others 
         genes_to_remove <-  c(genes_to_remove,possible_indices[dmeans <1])
-      } else if(sum(!is.na(dvars)) > 0) {
+      } else if(sum(!is.na(dvars)) > 0 & length(possible_indices[dvars == max(dvars)]) == 1) {
         #if 2 or more genes have expression over 1 or 2 or all genes have expression lower than 1 then keep the one with the highest variance
         genes_to_remove <- c(genes_to_remove, possible_indices[dvars != max(dvars)])
       } else if((sum(dmeans) != 0) & (sum(dmeans == max(dmeans)) == 1 ))  {
@@ -100,8 +100,6 @@ ensg_to_hgnc <- function(table, ensembl_version = 0, organism = 'hsapiens') {
       }
     
     } ## end of duplicate gene indexes decisive loop
-    
-    
     if(organism == 'hsapiens') {
       
       if(ensembl_version != 0) {
