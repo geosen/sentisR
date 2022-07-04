@@ -9,6 +9,7 @@
 #'If 2 or more genes have expression over 1, or 2 or all genes have expression 
 #'lower than 1, then keeps the one with the highest variance.
 #'
+#'date 04/07/2022
 #'@param table Input table with ENSG IDs as rownames
 #'@param ensembl_version The version of ensembl to be used. If none is provided the function uses the default (latest) version
 #'@param organism The organism to search for: hsapiens or mmusculus
@@ -17,9 +18,9 @@
 #'@export
 
 
-
 ensg_to_hgnc <- function(table, ensembl_version = 0, organism = 'hsapiens') {
   
+  table <- as.data.frame(table)
   
   
   if(organism == 'hsapiens')
