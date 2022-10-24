@@ -23,6 +23,9 @@
 
 volcano_sen <- function(table, title = "Cond_Up vs Cond_Down", significanceMeasure = c("fdr","PValue"), thresSig = 0.05, thresLogFC = 0.58, colorUp="darkgreen",colorDown = "steelblue", colorNeutral = "lightgrey" )
 {
+  if (length(significanceMeasure) >1) {
+    significanceMeasure <- 'fdr'
+  }
   require(ggplot2)
   require(dplyr)
   ##Volcano code
