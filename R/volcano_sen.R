@@ -26,24 +26,36 @@ volcano_sen <- function(table, title = "Cond_Up vs Cond_Down", significanceMeasu
   if (length(significanceMeasure) >1) {
     significanceMeasure <- 'fdr'
   }
-  require(ggplot2)
-  require(dplyr)
   ##Volcano code
-  table_sigup <- table %>%
-    filter(get(significanceMeasure) < thresSig, logFC > thresLogFC)
-  table_sigdown <- table %>%
-    filter(get(significanceMeasure) < thresSig, logFC < -thresLogFC)
+  upregulated <- table %>%
+    filter(get(significanceMeasure) < thresSig, logFC > thresLogFC) %>%
+    mutate(
+      change = 'Upregulated'
+    )
   
-  ggplot(table, aes(logFC, -log10(get(significanceMeasure)))) + 
-    geom_point(color =colorNeutral) +
-    geom_point(data = table_sigup, color = colorUp)+
-    geom_point(data = table_sigdown, color = colorDown) + 
+  downregulated <- table %>%
+    filter(get(significanceMeasure) < thresSig, logFC < -thresLogFC) %>%
+    mutate(
+      change = 'Downregulated'
+    )
+  
+  insignificant <- table %>%
+    filter(get(significanceMeasure) > thresSig | get(significanceMeasure) < thresSig & logFC <= thresLogFC & logFC >= -thresLogFC ) %>%
+    mutate(
+      change = 'Insignificant'
+    )
+  
+  table <- rbind(upregulated,downregulated,insignificant)
+  
+  ggplot(table, aes(logFC, -log10(get(significanceMeasure)),color = as.factor(change))) + 
+    geom_point() +
     geom_hline(yintercept= -log10(thresSig))+
     geom_vline(xintercept = -thresLogFC)+
     geom_vline(xintercept = thresLogFC)+
     scale_x_continuous(breaks = c(-3,-thresLogFC,0,thresLogFC,3,6,9), labels = c(-3,-thresLogFC,0,thresLogFC,3,6,9))+
     scale_y_continuous(breaks = c(0,-log10(thresSig),2.5,5,7.5,10), labels = c(0,paste0(toupper(significanceMeasure)," = ", thresSig),2.5,5,7.5,10))+
-    labs(title = title, x = "LogFC", y = paste0('-Log10(',toupper(significanceMeasure),')'))+
+    scale_color_manual(values = c('Upregulated' = colorUp, 'Downregulated' = colorDown, 'Insignificant' = colorNeutral))+
+    labs(title = title, x = 'LogFC', y = paste0('-Log10(',toupper(significanceMeasure),')'), color = 'Differential \nExpression \nResult')+
     theme_minimal()
   
 }
