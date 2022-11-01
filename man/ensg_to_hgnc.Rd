@@ -4,7 +4,7 @@
 \alias{ensg_to_hgnc}
 \title{Convert ENSG_ID rownames of a table to HGNC_ID IDs}
 \usage{
-ensg_to_hgnc(table, ensembl_version = NULL, organism = "hsapiens")
+ensg_to_hgnc(table, ensembl_version = 0, organism = "hsapiens")
 }
 \arguments{
 \item{table}{Input table with ENSG IDs as rownames}
@@ -26,4 +26,6 @@ it chooses higher variation.
 If only 1 gene has a mean expression over 1, removes all others. 
 If 2 or more genes have expression over 1, or 2 or all genes have expression 
 lower than 1, then keeps the one with the highest variance.
+
+date 04/07/2022
 }

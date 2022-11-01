@@ -21,7 +21,7 @@
 #'@export
 
 
-volcano_sen <- function(table, title = "Cond_Up vs Cond_Down", significanceMeasure = c("fdr","PValue"), thresSig = 0.05, thresLogFC = 0.58, colorUp="darkgreen",colorDown = "steelblue", colorNeutral = "lightgrey" )
+volcano_sen <- function(table, title = "Cond_Up vs Cond_Down", significanceMeasure = c("fdr","PValue"), thresSig = 0.05, thresLogFC = 0.58, colorUp="darkgreen",colorDown = "steelblue", colorNeutral = "lightgrey" , xlim = c(-10,10), ylim = c(0,15))
 {
   if (length(significanceMeasure) >1) {
     significanceMeasure <- 'fdr'
@@ -52,8 +52,8 @@ volcano_sen <- function(table, title = "Cond_Up vs Cond_Down", significanceMeasu
     geom_hline(yintercept= -log10(thresSig))+
     geom_vline(xintercept = -thresLogFC)+
     geom_vline(xintercept = thresLogFC)+
-    scale_x_continuous(breaks = c(-3,-thresLogFC,0,thresLogFC,3,6,9), labels = c(-3,-thresLogFC,0,thresLogFC,3,6,9))+
-    scale_y_continuous(breaks = c(0,-log10(thresSig),2.5,5,7.5,10), labels = c(0,paste0(toupper(significanceMeasure)," = ", thresSig),2.5,5,7.5,10))+
+    scale_x_continuous(breaks = c(seq(xlim[1],xlim[2],2),-thresLogFC,0,thresLogFC), labels = c(seq(xlim[1],xlim[2],2),-thresLogFC,0,thresLogFC), limits = xlim)+
+    scale_y_continuous(breaks = c(seq(ylim[1],ylim[2],2),-log10(thresSig)), labels = c(seq(ylim[1],ylim[2],2),paste0(toupper(significanceMeasure)," = ", thresSig)), limits = ylim)+
     scale_color_manual(values = c('Upregulated' = colorUp, 'Downregulated' = colorDown, 'Insignificant' = colorNeutral))+
     labs(title = title, x = 'LogFC', y = paste0('-Log10(',toupper(significanceMeasure),')'), color = 'Differential \nExpression \nResult')+
     theme_minimal()
