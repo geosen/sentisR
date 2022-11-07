@@ -56,6 +56,6 @@ volcano_sen <- function(table, title = "Cond_Up vs Cond_Down", significanceMeasu
     scale_y_continuous(breaks = c(seq(ylim[1],ylim[2],2),-log10(thresSig)), labels = c(seq(ylim[1],ylim[2],2),paste0(toupper(significanceMeasure)," = ", thresSig)), limits = ylim)+
     scale_color_manual(values = c('Upregulated' = colorUp, 'Downregulated' = colorDown, 'Insignificant' = colorNeutral))+
     labs(title = title, x = 'LogFC', y = paste0('-Log10(',toupper(significanceMeasure),')'), color = 'Differential \nExpression \nResult')+
-    theme_minimal()
+    theme_minimal() + theme(plot.title = element_text(hjust = 0.5))
   
 }
