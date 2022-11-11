@@ -14,6 +14,7 @@ pca_sen(
   PCy = 2,
   point_alpha = 0.7,
   point_size = 7,
+  add_ellipse = FALSE,
   save_pdf = "FALSE",
   pdf_height = 10,
   pdf_width = 10,
@@ -38,6 +39,8 @@ pca_sen(
 \item{point_alpha}{Set the transparency of points}
 
 \item{point_size}{Set the size of points}
+
+\item{add_ellipse}{If you wish to add an ellipse around the points}
 
 \item{save_pdf}{Whether to save the plot to a pdf file}
 

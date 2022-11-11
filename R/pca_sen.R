@@ -15,6 +15,7 @@
 #'@param PCy The y-axis Principal Component
 #'@param point_alpha Set the transparency of points
 #'@param point_size Set the size of points
+#'@param add_ellipse If you wish to add an ellipse around the points
 #'@param save_pdf Whether to save the plot to a pdf file
 #'@param pdf_height The height of the output pdf
 #'@param pdf_width The width of the output pdf
@@ -33,6 +34,7 @@ pca_sen <- function(cpm, color_factor,
                     PCy=2,
                     point_alpha = 0.7,
                     point_size = 7,
+                    add_ellipse = FALSE,
                     save_pdf = 'FALSE', 
                     pdf_height = 10, 
                     pdf_width = 10,
@@ -76,6 +78,10 @@ g <- ggplot(as.data.frame(pcacpm$ind$coord),
   labs(title = title, x=paste0('PC',PCx, '(',round(pcacpm$eig[PCx,2],2),')'), y= paste0('PC',PCy, '(',round(pcacpm$eig[PCy,2],2),')')) +
   scale_color_manual(name = color_factor_name, labels = levels(factor(color_factor)),values = colors_plot)+
   theme_minimal() + theme(plot.title = element_text(hjust = 0.5))
+
+if (add_ellipse) {
+  g <- g + stat_ellipse()
+}
 
 if (save_pdf){
   print(g)  
