@@ -41,9 +41,19 @@ pca_sen <- function(cpm, color_factor,
                     pdf_file = "PCA_sen_output.pdf"
                     ) {
 ##load libraries
-library(FactoMineR)
-library(ggplot2)
-
+  if (!requireNamespace("ggplot2", quietly = TRUE)) {
+    stop(
+      "Package \"ggplot2\" must be installed to use this function.",
+      call. = FALSE
+    )
+  }
+  if (!requireNamespace("FactoMineR", quietly = TRUE)) {
+    stop(
+      "Package \"FactoMineR\" must be installed to use this function.",
+      call. = FALSE
+    )
+  }
+  
 #log transformaiton
 logcpm <- log(cpm + 1) 
 #expression table must be transposed
@@ -60,7 +70,6 @@ if (is.null(colors_list)) {
 } else {
   colors_plot <- colors_list
 }
-
 
   if (save_pdf) {
     pdf(pdf_file, height = pdf_height, width = pdf_width)  

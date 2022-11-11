@@ -20,6 +20,14 @@
 
 ensg_to_hgnc <- function(table, ensembl_version = 0, organism = 'hsapiens') {
   
+  
+  if (!requireNamespace("biomaRt", quietly = TRUE)) {
+    stop(
+      "Package \"biomaRt\" must be installed to use this function.",
+      call. = FALSE
+    )
+  }
+  
   table <- as.data.frame(table)
   
   

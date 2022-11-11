@@ -14,7 +14,14 @@ volcano_sen(
   colorDown = "steelblue",
   colorNeutral = "lightgrey",
   xlim = c(-10, 10),
-  ylim = c(0, 15)
+  ylim = c(0, 15),
+  breaks_x_default = FALSE,
+  breaks_y_default = FALSE,
+  genes_to_label = NULL,
+  label_columns_names = NULL,
+  ids = c("mixed", "single"),
+  label_size = 4,
+  label_alpha = 0.7
 )
 }
 \arguments{
@@ -33,6 +40,24 @@ volcano_sen(
 \item{colorDown}{The downregulated genes colors}
 
 \item{colorNeutral}{The color of non-statistically significant or non-logFC significant genes}
+
+\item{xlim}{The limits of the x-axis}
+
+\item{ylim}{The limits of the y-axis}
+
+\item{breaks_x_default}{If you wish to use the default x-axis breaks}
+
+\item{breaks_y_default}{If you wish to use the default y-axis breaks}
+
+\item{genes_to_label}{The list of genes to label}
+
+\item{ids}{If you wish to have a mixed type of ids (i.e. Ensembl and HGNC symbols) or a single type}
+
+\item{label_size}{The size of the gene labels}
+
+\item{label_alpha}{The transparency of the gene labels}
+
+\item{label_column_names}{The columns of the gene labels}
 }
 \value{
 ggplot object
