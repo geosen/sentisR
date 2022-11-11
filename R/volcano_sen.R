@@ -22,6 +22,7 @@
 #'@param ids If you wish to have a mixed type of ids (i.e. Ensembl and HGNC symbols) or a single type
 #'@param label_size The size of the gene labels
 #'@param label_alpha The transparency of the gene labels
+#'@param max_overlaps The number of geom_label_repel max.overlaps parameter
 #'
 #'@return ggplot object
 #'@export
@@ -30,8 +31,8 @@
 volcano_sen <- function(table, title = "Cond_Up vs Cond_Down", significanceMeasure = c("fdr","PValue"), thresSig = 0.05, thresLogFC = 0.58, 
                         colorUp="darkgreen",colorDown = "steelblue", colorNeutral = "lightgrey" , 
                         xlim = c(-10,10), ylim = c(0,15), breaks_x_default = FALSE, breaks_y_default = FALSE,
-                        genes_to_label = NULL, label_columns_names = NULL, ids=c("mixed","single"),
-                        label_size = 4, label_alpha = 0.7)
+                        genes_to_label = NULL, label_columns_names = NULL, ids=c("single","mixed"),
+                        label_size = 4, label_alpha = 0.7, max_overlaps = 40)
   
   {
   
@@ -44,6 +45,12 @@ volcano_sen <- function(table, title = "Cond_Up vs Cond_Down", significanceMeasu
   if (!requireNamespace("dplyr", quietly = TRUE)) {
     stop(
       "Package \"dplyr\" must be installed to use this function.",
+      call. = FALSE
+    )
+  }
+  if (!requireNamespace("ggrepel", quietly = TRUE)) {
+    stop(
+      "Package \"ggrepel\" must be installed to use this function.",
       call. = FALSE
     )
   }
@@ -100,11 +107,13 @@ if (!breaks_y_default) {
 
 ##adding genes with labels
 if (!is.null(genes_to_label)) {
-  library(ggrepel)
   
+  if(length(ids) >1) {
+    ids <- "single"
+  }
   
   if(is.null(label_columns_names)){
-    if(sum(rownames(table) %in% genes_to_label)==0){
+    if(sum(genes_to_label %in% rownames(table))==0){
       stop("Genes not found in rownames. Please provide the column name of the label column.")
     } else {
     g <- g + geom_label_repel(
@@ -112,7 +121,9 @@ if (!is.null(genes_to_label)) {
       aes(label= rownames(table[rownames(table) %in% genes_to_label,]),color = as.factor(change)),
       min.segment.length = unit(0.01,"cm"),
       size = label_size,
-      alpha = label_alpha)
+      alpha = label_alpha,
+      max.overlaps = max_overlaps
+      )
     }
     
   }  else if (!is.null(label_columns_names) & !(label_columns_names %in% colnames(table))) {
@@ -126,15 +137,15 @@ if (!is.null(genes_to_label)) {
     } else if (length(label_columns_names <2)) {
       stop("Please choose two columns for IDs")
     } else {
-     
-      if(sum(is.null(get(paste0("table$",label_columns_names[1]))))<get(paste0("table$",label_columns_names[2]))){
+      
+      if(sum(is.null(table[,label_columns_names[1]]))< sum(is.null(table[,label_columns_names[2]]))){
         
-      table$mixed <- get(paste0("table$",label_columns_names[2]))
-      table$mixed(is.null(table$mixed)) <- get(paste0("table$",label_columns_names[1]))[is.null(table$mixed)]
+      table$mixed <- table[,label_columns_names[2]]
+      table$mixed(is.null(table$mixed)) <- table[is.null(table$mixed),label_columns_names[1]]
 
       } else {
-        table$mixed <- get(paste0("table$",label_columns_names[1]))
-        table$mixed(is.null(table$mixed)) <- get(paste0("table$",label_columns_names[2]))[is.null(table$mixed)]
+        table$mixed <- table[,label_columns_names[1]]
+        table$mixed(is.null(table$mixed)) <- table[is.null(table$mixed),label_columns_names[2]]
       }
       
       g <- g + geom_label_repel(
@@ -142,7 +153,8 @@ if (!is.null(genes_to_label)) {
         aes(label= mixed,color = as.factor(change)),
         min.segment.length = unit(0.01,"cm"),
         size = label_size,
-        alpha = label_alpha
+        alpha = label_alpha,
+        max.overlaps = max_overlaps
       )
       
     }
@@ -151,12 +163,16 @@ if (!is.null(genes_to_label)) {
     if (length(label_columns_names) !=1){
       stop("Please choose only one column for hgnc/ensembl IDs")
     } else {
+      
+      keep <- match(genes_to_label,table[,label_columns_names])
+      
       g <- g + geom_label_repel(
-        data = table[get(paste0("table$",label_columns_names)) %in% genes_to_label,],
-        aes(label= get(paste0("table$",label_columns_names)),color = as.factor(change)),
+        data = table[keep,],
+        aes(label= table[keep,label_columns_names],color = as.factor(change)),
         min.segment.length = unit(0.01,"cm"),
         size = label_size,
-        alpha = label_alpha
+        alpha = label_alpha,
+        max.overlaps = max_overlaps
       )
     }
   } else {

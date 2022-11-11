@@ -19,9 +19,10 @@ volcano_sen(
   breaks_y_default = FALSE,
   genes_to_label = NULL,
   label_columns_names = NULL,
-  ids = c("mixed", "single"),
+  ids = c("single", "mixed"),
   label_size = 4,
-  label_alpha = 0.7
+  label_alpha = 0.7,
+  max_overlaps = 40
 )
 }
 \arguments{
@@ -56,6 +57,8 @@ volcano_sen(
 \item{label_size}{The size of the gene labels}
 
 \item{label_alpha}{The transparency of the gene labels}
+
+\item{max_overlaps}{The number of geom_label_repel max.overlaps parameter}
 
 \item{label_column_names}{The columns of the gene labels}
 }
