@@ -79,14 +79,16 @@ if (length(color_factor) != dim(cpm)[2]) {
   print("Color factor length is not equal to sample size")
 }
 
-
+data_pca <- as.data.frame(pcacpm$ind$coord)
 ####Plotting####
-g <- ggplot(as.data.frame(pcacpm$ind$coord), 
-       aes(Dim.1,Dim.2, color = factor(color_factor))) +
+g <- ggplot(data_pca, 
+       aes(data_pca[,PCx],data_pca[,PCy], color = factor(color_factor))) +
   geom_point(alpha = point_alpha, size= point_size, key_glyph='point') + 
   labs(title = title, x=paste0('PC',PCx, '(',round(pcacpm$eig[PCx,2],2),')'), y= paste0('PC',PCy, '(',round(pcacpm$eig[PCy,2],2),')')) +
   scale_color_manual(name = color_factor_name, labels = levels(factor(color_factor)),values = colors_plot)+
   theme_minimal() + theme(plot.title = element_text(hjust = 0.5))
+
+g
 
 if (add_ellipse) {
   g <- g + stat_ellipse()
