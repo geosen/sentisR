@@ -88,8 +88,6 @@ g <- ggplot(data_pca,
   scale_color_manual(name = color_factor_name, labels = levels(factor(color_factor)),values = colors_plot)+
   theme_minimal() + theme(plot.title = element_text(hjust = 0.5))
 
-g
-
 if (add_ellipse) {
   g <- g + stat_ellipse()
 }
@@ -98,7 +96,7 @@ if (save_pdf){
   print(g)  
   dev.off()  
 } else {
-  return(g)    
+  g    
   }
 
 }
