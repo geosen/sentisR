@@ -2,6 +2,8 @@
 
 export(ensg_to_hgnc)
 export(generate_counts)
+export(isolate_genes)
 export(pca_sen)
 export(read_gsea)
+export(remove_version)
 export(volcano_sen)
