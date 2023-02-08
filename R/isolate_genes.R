@@ -15,9 +15,9 @@ isolate_genes <- function(object,
   
 
   if(gene_column == 'rownames') {
-    object[rownames(object) %in% entry_list,]
+    object[rownames(object) %in% gene_list,]
   } else if(gene_column != 'rownames' & gene_column %in% names(object)) {
-    object[object[,gene_column] %in% entry_list,]
+    object[object[,gene_column] %in% gene_list,]
   }
 
 }
