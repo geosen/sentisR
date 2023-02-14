@@ -70,5 +70,11 @@ Creates a volcano plot based on a gene list with logFC and (fdr or PValue) colum
 Works best with edgeR results.
 }
 \details{
+Dependencies are:
+library(ggplot2)
+library(dplyr)
+library(ggrepel)
+
+
 date 24/10/2022
 }

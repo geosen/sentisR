@@ -1,5 +1,10 @@
 #'Plot histograms of expression of specific genes
 #'
+#'Dependencies are:
+#' library(ggplot2)
+#' library(tidyverse)
+#'
+#'
 #'date 10/02/2023
 #'@param expression Object with expression values. The row names of the object must be the gene identifiers.
 #'@param genes The genes that will be plotted. Identifiers must match some row names of the expression object.
@@ -10,7 +15,6 @@
 plot_genes_expression <-  function(expression,
                                         genes){
 #loading libraries  
-library(sentisR)
 library(ggplot2)
 library(tidyverse)
     

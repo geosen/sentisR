@@ -3,6 +3,9 @@
 #'Creates a pca plot based on a gene expression list 
 #'Works best with normalized values 
 #'
+#'Dependencies are:
+#' library(ggplot2)
+#' library(FactoMineR)
 #'
 #'
 #'date 07/11/2022

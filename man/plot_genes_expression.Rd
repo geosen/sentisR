@@ -15,5 +15,10 @@ plot_genes_expression(expression, genes)
 Data Frame
 }
 \description{
+Dependencies are:
+library(ggplot2)
+library(tidyverse)
+}
+\details{
 date 10/02/2023
 }

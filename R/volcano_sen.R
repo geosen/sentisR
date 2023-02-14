@@ -3,6 +3,11 @@
 #'Creates a volcano plot based on a gene list with logFC and (fdr or PValue) columns
 #'Works best with edgeR results. 
 #'
+#'Dependencies are:
+#' library(ggplot2)
+#' library(dplyr)
+#' library(ggrepel)
+#'
 #'
 #'date 24/10/2022
 #'@param table Input table with logFC and (fdr or PValue) columns

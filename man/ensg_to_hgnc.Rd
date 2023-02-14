@@ -27,5 +27,8 @@ If only 1 gene has a mean expression over 1, removes all others.
 If 2 or more genes have expression over 1, or 2 or all genes have expression 
 lower than 1, then keeps the one with the highest variance.
 
+Dependencies are:
+library(biomaRt)
+
 date 04/07/2022
 }
