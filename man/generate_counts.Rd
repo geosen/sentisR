@@ -8,7 +8,8 @@ generate_counts(
   count_files_dir,
   file_ext_to_remove,
   remove_last_rows = FALSE,
-  rows_to_remove = 4
+  rows_to_remove = 4,
+  sep = "\\t"
 )
 }
 \arguments{

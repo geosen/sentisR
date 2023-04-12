@@ -21,7 +21,8 @@ pca_sen(
   save_pdf = "FALSE",
   pdf_height = 10,
   pdf_width = 10,
-  pdf_file = "PCA_sen_output.pdf"
+  pdf_file = "PCA_sen_output.pdf",
+  logged = FALSE
 )
 }
 \arguments{

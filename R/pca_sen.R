@@ -44,7 +44,8 @@ pca_sen <- function(cpm, color_factor,
                     save_pdf = 'FALSE', 
                     pdf_height = 10, 
                     pdf_width = 10,
-                    pdf_file = "PCA_sen_output.pdf"
+                    pdf_file = "PCA_sen_output.pdf",
+                    logged = FALSE
                     ) {
 ##load libraries
   if (!requireNamespace("ggplot2", quietly = TRUE)) {
@@ -61,7 +62,12 @@ pca_sen <- function(cpm, color_factor,
   }
   
 #log transformaiton
+  if(logged){
+    logcpm <- cpm
+    
+  } else {
 logcpm <- log(cpm + 1) 
+  }
 #expression table must be transposed
 tlogcpm <- t(logcpm)
 #run PCA
