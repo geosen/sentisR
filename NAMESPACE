@@ -2,10 +2,12 @@
 
 export(ENSG_manipulator_shiny)
 export(combine_htseq_files)
+export(counts_to_tpm)
 export(ensg_to_hgnc)
 export(generate_counts)
 export(isolate_genes)
 export(pca_sen)
+export(pca_sen_vis)
 export(plot_genes_expression)
 export(read_gsea)
 export(remove_version)
