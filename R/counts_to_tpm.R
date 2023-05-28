@@ -73,7 +73,7 @@ counts_to_tpm <- function(df,
       if(identifier_type == 'mgi_symbol'){
         df_rpk <- df/gene_list$gene_length[match(rownames(df),gene_list$mgi_symbol)] 
       } else if (identifier_type == 'ensembl_gene_id') {
-        df_rpk <- df/gene_list$gene_length[match(rownames(df),gene_list$ensembl_gene_id)]
+        df_rpk <- df/gene_list$gene_length[match(rownames(df),gene_list$ensembl_gene_id_version)]
       }
       
     }
