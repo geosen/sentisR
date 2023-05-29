@@ -81,7 +81,7 @@ counts_to_tpm <- function(df,
   }
   
   #divide every column of the rpk data frame with a "per milliion" normalizing factor
-  df_tpm <- sweep(df_rpk,2,colSums(df_rpk)/10^6,'/')
+  df_tpm <- sweep(df_rpk,2,colSums(df_rpk, na.rm = TRUE)/10^6,'/')
   #return the data frame
   df_tpm
 }
