@@ -25,12 +25,6 @@
 #'@return A ComplexHeatmap
 #'@export
 
-
-library(ComplexHeatmap)
-library(circlize)
-library(dplyr)
-library(stringr)
-
 wgcna_module_heatmap_plot <- function(wgcna_trait_res, 
                                       row_labels = NULL,
                                       col_labels = NULL,
@@ -46,7 +40,7 @@ wgcna_module_heatmap_plot <- function(wgcna_trait_res,
                                       legend_title = 'Correlation')
 
 {
-  #filtering out P-value columns and converting to a matrix
+    #filtering out P-value columns and converting to a matrix
   wgcna_mat <- as.matrix(wgcna_trait_res[,!grepl('p\\.', colnames(wgcna_trait_res))])
   
   #keeping P-values seprately for significance annotation
