@@ -78,7 +78,7 @@ wgcna_module_heatmap_plot <- function(wgcna_trait_res,
                                      r = unit(2, "pt"),
                                      padding = unit(c(2, 2, 2, 2), "pt")), 
             column_title_gp = gpar(box_fill = "#EEEEEE"),
-            heatmap_legend_param = list(title = "Legend Title"),
+            heatmap_legend_param = list(title = legend_title),
             cell_fun = function(j, i, x, y, w, h, fill){
               if(wgcna_pvalues[i, j]) {
                 grid.text('*', x, y)
@@ -102,7 +102,7 @@ wgcna_module_heatmap_plot <- function(wgcna_trait_res,
                                      r = unit(2, "pt"),
                                      padding = unit(c(2, 2, 2, 2), "pt")), 
             column_title_gp = gpar(box_fill = "#EEEEEE"),
-            heatmap_legend_param = list(title = "Legend Title"),
+            heatmap_legend_param = list(title = legend_title),
             cell_fun = function(j, i, x, y, w, h, fill){
               if(wgcna_pvalues[i, j]) {
                 grid.text('*', x, y)
