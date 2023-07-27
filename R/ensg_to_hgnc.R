@@ -16,12 +16,14 @@
 #'@param table Input table with ENSG IDs as rownames
 #'@param ensembl_version The version of ensembl to be used. If none is provided the function uses the default (latest) version
 #'@param organism The organism to search for: hsapiens or mmusculus
+#'@param version TRUE/FALSE. Whether the identifiers of the original dataframe have an ensembl gene id version number
 #'
 #'@return A dataframe with deduplicated HGNC IDs as rownames
 #'@export
 
 
-ensg_to_hgnc <- function(table, ensembl_version = 0, organism = 'hsapiens') {
+ensg_to_hgnc <- function(table, ensembl_version = 0, organism = 'hsapiens',
+                         version = FALSE) {
   
   
   if (!requireNamespace("biomaRt", quietly = TRUE)) {
@@ -38,35 +40,78 @@ ensg_to_hgnc <- function(table, ensembl_version = 0, organism = 'hsapiens') {
   {
     dataset = 'hsapiens_gene_ensembl'
     
+    
+    
     if (ensembl_version != 0){
+      #if an ensembl version is provided, the mart is defined by that version number
       mart = useEnsembl(biomart = 'ensembl', dataset = dataset, version = ensembl_version)  
-      conv_table <- getBM(attributes = c('hgnc_symbol','ensembl_gene_id_version'), filters = 'ensembl_gene_id_version', values = rownames(table), mart = mart)
-      conv_table <- conv_table[!duplicated(conv_table$ensembl_gene_id_version),]
-      table$genes <- conv_table$hgnc_symbol[match(rownames(table),conv_table$ensembl_gene_id_version)]
       
+      #the process of converting and deduplicating is different if the original identifiers have a version number or not.
+      if(version){
+        conv_table <- getBM(attributes = c('hgnc_symbol','ensembl_gene_id_version'), filters = 'ensembl_gene_id_version', values = rownames(table), mart = mart)
+        conv_table <- conv_table[!duplicated(conv_table$ensembl_gene_id_version),]
+        table$genes <- conv_table$hgnc_symbol[match(rownames(table),conv_table$ensembl_gene_id_version)]  
+      } else {
+        conv_table <- getBM(attributes = c('hgnc_symbol','ensembl_gene_id'), filters = 'ensembl_gene_id', values = rownames(table), mart = mart)
+        conv_table <- conv_table[!duplicated(conv_table$ensembl_gene_id),]
+        table$genes <- conv_table$hgnc_symbol[match(rownames(table),conv_table$ensembl_gene_id)]  
+      }
+      
+      #if an ensembl version if not provided then the mart will use the latest ensembl version.
     } else {
-      rownames(table) <- gsub('\\.[[:digit:]]{1+}$','',rownames(table))
+      #rownames(table) <- gsub('\\.[[:digit:]]{1+}$','',rownames(table)) This removed the version number for safety. Now it completely dependend upon the user.
       mart = useEnsembl(biomart = 'ensembl', dataset = dataset)
+      
+      if(version){
+        conv_table <- getBM(attributes = c('hgnc_symbol','ensembl_gene_id_version'), filters = 'ensembl_gene_id_version', values = rownames(table), mart = mart)
+        conv_table <- conv_table[!duplicated(conv_table$ensembl_gene_id_version),]
+        table$genes <- conv_table$hgnc_symbol[match(rownames(table),conv_table$ensembl_gene_id_version)]  
+      } else {
       conv_table <- getBM(attributes = c('hgnc_symbol','ensembl_gene_id'), filters = 'ensembl_gene_id', values = rownames(table), mart = mart)
       conv_table <- conv_table[!duplicated(conv_table$ensembl_gene_id),]
       table$genes <- conv_table$hgnc_symbol[match(rownames(table),conv_table$ensembl_gene_id)]
+      }
     }
+    
+    
+    
   } else if (organism == 'mmusculus') {
     
+    
+    
     dataset = 'mmusculus_gene_ensembl'
+    
+    
     if (ensembl_version != 0){
+      ##If an ensembl version is provided, the mart is defined by it.
       mart = useEnsembl(biomart = 'ensembl', dataset = dataset, version = ensembl_version)  
+      
+      if(version){
       conv_table <- getBM(attributes = c('mgi_symbol','ensembl_gene_id_version'), filters = 'ensembl_gene_id_version', values = rownames(table), mart = mart)
       conv_table <- conv_table[!duplicated(conv_table$ensembl_gene_id_version),]
       table$genes <- conv_table$mgi_symbol[match(rownames(table),conv_table$ensembl_gene_id_version)]
-    } else {
-      rownames(table) <- gsub('\\.[[:digit:]]{1+}$','',rownames(table))
+      } else {
+      conv_table <- getBM(attributes = c('mgi_symbol','ensembl_gene_id'), filters = 'ensembl_gene_id', values = rownames(table), mart = mart)
+      conv_table <- conv_table[!duplicated(conv_table$ensembl_gene_id),]
+      table$genes <- conv_table$mgi_symbol[match(rownames(table),conv_table$ensembl_gene_id)] 
+      }
+    
+      
+      } else {
+      ##if an ensembl version is not provided, the mart will use the latest available ensembl version
+        #rownames(table) <- gsub('\\.[[:digit:]]{1+}$','',rownames(table))
       mart = useEnsembl(biomart = 'ensembl', dataset = dataset)
+      
+      if(version){
+      conv_table <- getBM(attributes = c('mgi_symbol','ensembl_gene_id_version'), filters = 'ensembl_gene_id_version', values = rownames(table), mart = mart)
+      conv_table <- conv_table[!duplicated(conv_table$ensembl_gene_id_version),]
+      table$genes <- conv_table$mgi_symbol[match(rownames(table),conv_table$ensembl_gene_id_version)]
+      } else {
       conv_table <- getBM(attributes = c('mgi_symbol','ensembl_gene_id'), filters = 'ensembl_gene_id', values = rownames(table), mart = mart)
       conv_table <- conv_table[!duplicated(conv_table$ensembl_gene_id),]
       table$genes <- conv_table$mgi_symbol[match(rownames(table),conv_table$ensembl_gene_id)]
+      }
     }
-    
     
   } else {
     errorCondition(message = 'Invalid organism, please select hsapiens or mmusculus')
@@ -114,7 +159,7 @@ ensg_to_hgnc <- function(table, ensembl_version = 0, organism = 'hsapiens') {
     } ## end of duplicate gene indexes decisive loop
     if(organism == 'hsapiens') {
       
-      if(ensembl_version != 0) {
+      if(version) {
           final_table <- data.frame(table_no_genes[-genes_to_remove,])
           rownames(final_table) <- rownames(table_no_genes)[-genes_to_remove]
           rownames(final_table) <- conv_table$hgnc_symbol[match(rownames(final_table),conv_table$ensembl_gene_id_version)]
@@ -125,8 +170,7 @@ ensg_to_hgnc <- function(table, ensembl_version = 0, organism = 'hsapiens') {
           }
     } else if (organism == 'mmusculus') 
       {
-      
-      if(ensembl_version != 0) {
+      if(version) {
           final_table <- data.frame(table_no_genes[-genes_to_remove,])
           rownames(final_table) <- rownames(table_no_genes)[-genes_to_remove]
           rownames(final_table) <- conv_table$mgi_symbol[match(rownames(final_table),conv_table$ensembl_gene_id_version)]
@@ -141,7 +185,7 @@ ensg_to_hgnc <- function(table, ensembl_version = 0, organism = 'hsapiens') {
     {
     
     if(organism == 'hsapiens') {
-        if(ensembl_version != 0) {
+        if(version) {
         final_table <- data.frame(table_no_genes)
         rownames(final_table) <- conv_table$hgnc_symbol[match(rownames(table_no_genes),conv_table$ensembl_gene_id_version)]
         } else {
@@ -150,7 +194,7 @@ ensg_to_hgnc <- function(table, ensembl_version = 0, organism = 'hsapiens') {
         }
       } else if(organism == 'mmusculus') {
       
-      if(ensembl_version != 0){
+      if(version){
         final_table <- data.frame(table_no_genes)
         rownames(final_table) <- conv_table$mgi_symbol[match(rownames(table_no_genes),conv_table$ensembl_gene_id_version)]
       } else {

@@ -4,7 +4,12 @@
 \alias{ensg_to_hgnc}
 \title{Convert ENSG_ID rownames of a table to HGNC_ID IDs}
 \usage{
-ensg_to_hgnc(table, ensembl_version = 0, organism = "hsapiens")
+ensg_to_hgnc(
+  table,
+  ensembl_version = 0,
+  organism = "hsapiens",
+  version = FALSE
+)
 }
 \arguments{
 \item{table}{Input table with ENSG IDs as rownames}
@@ -12,6 +17,8 @@ ensg_to_hgnc(table, ensembl_version = 0, organism = "hsapiens")
 \item{ensembl_version}{The version of ensembl to be used. If none is provided the function uses the default (latest) version}
 
 \item{organism}{The organism to search for: hsapiens or mmusculus}
+
+\item{version}{TRUE/FALSE. Whether the identifiers of the original dataframe have an ensembl gene id version number}
 }
 \value{
 A dataframe with deduplicated HGNC IDs as rownames
