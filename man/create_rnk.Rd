@@ -11,7 +11,8 @@ create_rnk(
   sig_measure_col_name = "fdr",
   remove_version = FALSE,
   gene_id_column = NULL,
-  output_table_filename = NULL
+  output_table_filename = NULL,
+  return_data = FALSE
 )
 }
 \arguments{
@@ -21,7 +22,7 @@ create_rnk(
 
 \item{gene_id_column}{}
 
-\item{output_table_filename}{}
+\item{return_data}{}
 }
 \value{
 Creates an rnk file in the directory (current or specified)

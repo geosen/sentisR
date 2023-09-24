@@ -11,6 +11,7 @@
 #'@param remove_version
 #'@param gene_id_column 
 #'@param output_table_filename
+#'@param return_data
 #'
 #'@return Creates an rnk file in the directory (current or specified)
 #'@export
@@ -21,7 +22,8 @@ create_rnk <- function(lrt_table,
                        sig_measure_col_name = 'fdr', 
                        remove_version = FALSE,
                        gene_id_column = NULL,
-                       output_table_filename = NULL) {
+                       output_table_filename = NULL,
+                       return_data = FALSE) {
 
   if(is.null(gene_id_column)) {
   DEGlist <- lrt_table 
@@ -48,14 +50,19 @@ create_rnk <- function(lrt_table,
   
   
   #output
-  if(is.null(output_table_filename)) {
-    output_table_filename = paste0(as.numeric(Sys.time()),'_R_generated.rnk')
-  }   
+  if(return_data) {
+    sorted_nDEGlist
+  } else {
     
-  write.table(sorted_nDEGlist,
-            file =  output_table_filename, 
-            sep = "\t", 
-            row.names = FALSE, 
-            col.names = FALSE, 
-            quote = FALSE ) #output filepath here
-}
+    if(is.null(output_table_filename)) {
+      output_table_filename = paste0(as.numeric(Sys.time()),'_R_generated.rnk')
+    }   
+    
+    write.table(sorted_nDEGlist,
+              file =  output_table_filename, 
+              sep = "\t", 
+              row.names = FALSE, 
+              col.names = FALSE, 
+              quote = FALSE ) #output filepath here
+    }
+  }
